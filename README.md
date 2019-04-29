@@ -20,9 +20,7 @@ $data = [
 
 
 //指定用户推送消息
-if (!empty($post['device_tokens'])) {
     $result = $upush->setParams($data)->unicast($deviceType);// $deviceType 设备类型 ios 、 android
-} else {
+
 //广播
     $result = $upush->setParams($data)->broadcast($deviceType);
-}

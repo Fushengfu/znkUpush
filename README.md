@@ -3,10 +3,10 @@
 
 # 使用规则
 ## 示例
-
+```
 实例化实例
 $umeng = new Umeng(appkey, secret);
-```
+
 请求参数
 
 $data = [

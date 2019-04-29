@@ -1,5 +1,5 @@
 <?php
-namespace Amulet\Umeng;
+namespace Amulet\Umeng\Notifications;
 
 abstract class UmengNotification {
 	// The host

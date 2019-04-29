@@ -1,8 +1,8 @@
 <?php
 
-namespace Amulet\Umeng;
+namespace Amulet\Umeng\Notifications;
 
-use Amulet\Umeng\UmengNotification;
+use Amulet\Umeng\Notifications\UmengNotification;
 
 class AndroidNotification extends UmengNotification {
 	// The array for payload, please see API doc for more information

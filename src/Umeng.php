@@ -2,8 +2,8 @@
 
 namespace Amulet;
 
-use Amulet\Umeng\AndroidNotification;
-use Amulet\Umeng\IOSNotification;
+use Amulet\Umeng\Notifications\AndroidNotification;
+use Amulet\Umeng\Notifications\IOSNotification;
 use Log;
 
 class Umeng 

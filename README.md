@@ -6,9 +6,9 @@
 
 实例化实例
 $umeng = new Umeng(appkey, secret);
-
-请求参数
 ```
+请求参数
+
 $data = [
     'device_tokens'=> $post['device_tokens'],
     'content'=> $post['content'],

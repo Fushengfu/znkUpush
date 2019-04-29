@@ -1,0 +1,21 @@
+{
+    "name": "amulet/znk-upush",
+    "description": "umeng api sdk",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "amulet",
+            "email": "shengfu8161980541@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "Amulet\\": "src/"
+        }
+    }
+}

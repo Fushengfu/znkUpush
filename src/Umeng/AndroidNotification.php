@@ -7,19 +7,19 @@ use Amulet\Umeng\UmengNotification;
 class AndroidNotification extends UmengNotification {
 	// The array for payload, please see API doc for more information
 	protected $androidPayload = [
-									"display_type"  =>  "notification",
-									"body"         	=>  [
-															"ticker"       => null,
-															"title"        => null,
-															"text"         => null,
-															"url"          => "",
-															"play_vibrate" => "true", 
-															"play_lights"  => "true",
-															"play_sound"   => "true",
-															"after_open"   => null,
-														]
-								];
-								
+		"display_type"  =>  "notification",
+		"body"         	=>  [
+			"ticker"       => null,
+			"title"        => null,
+			"text"         => null,
+			"url"          => "",
+			"play_vibrate" => "true", 
+			"play_lights"  => "true",
+			"play_sound"   => "true",
+			"after_open"   => null,
+		]
+	];
+
 	// Keys can be set in the payload level
 	protected $PAYLOAD_KEYS = array("display_type");
 
@@ -48,15 +48,15 @@ class AndroidNotification extends UmengNotification {
 	}
 
 	/**
-     * reports
-     * @Author Amulet
-     * @Email 2061802928@qq.com
-     * @Create Date 2019/04/11
-     * @Create Time 10:41
-     * @Describe 数据处理
-     * @param Request $request
-     * @return mixed
-     */
+	* reports
+	* @Author Amulet
+	* @Email 2061802928@qq.com
+	* @Create Date 2019/04/11
+	* @Create Time 10:41
+	* @Describe 数据处理
+	* @param Request $request
+	* @return mixed
+	*/
 	public function setPredefinedKeyValue($key, $value) {
 		if (!is_string($key))
 			throw new Exception("key should be a string!");

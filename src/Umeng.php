@@ -32,15 +32,15 @@ class Umeng
 	}
 
 	/**
-     * reports
-     * @Author Amulet
-     * @Email 2061802928@qq.com
-     * @Create Date 2019/04/11
-     * @Create Time 10:41
-     * @Describe 数据处理
-     * @param Request $request
-     * @return mixed
-     */
+	* reports
+	* @Author Amulet
+	* @Email 2061802928@qq.com
+	* @Create Date 2019/04/11
+	* @Create Time 10:41
+	* @Describe 数据处理
+	* @param Request $request
+	* @return mixed
+	*/
 	public function setParams(array $data)
 	{
 		foreach ($this->PARAMS_KEY as $key) {
@@ -50,8 +50,8 @@ class Umeng
 		}
 		$this->sendBody = [
 			"title"		=>	$this->title,
-		    "subtitle"	=>	$this->subtitle??$this->title,
-		    "body"		=>	$this->content
+			"subtitle"	=>	$this->subtitle??$this->title,
+			"body"		=>	$this->content
 		];
 		return $this;
 	}

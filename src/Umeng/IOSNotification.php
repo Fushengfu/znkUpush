@@ -6,12 +6,12 @@ use Amulet\Umeng\UmengNotification;
 class IOSNotification extends UmengNotification {
 	// The array for payload, please see API doc for more information
 	protected $iosPayload = [
-								"aps"=>  [
-									"alert"=>  null,
-								]
-			        			//"key1"	=>	"value1",
-			        			//"key2"	=>	"value2"
-							];
+		"aps"=>  [
+			"alert"=>  null,
+		]
+	//"key1"	=>	"value1",
+	//"key2"	=>	"value2"
+	];
 
 	// Keys can be set in the aps level
 	protected $APS_KEYS    = ['alert', "badge", "sound", "content-available"];
@@ -23,15 +23,15 @@ class IOSNotification extends UmengNotification {
 	}
 
 	/**
-     * reports
-     * @Author Amulet
-     * @Email 2061802928@qq.com
-     * @Create Date 2019/04/11
-     * @Create Time 10:41
-     * @Describe 数据处理
-     * @param Request $request
-     * @return mixed
-     */
+	* reports
+	* @Author Amulet
+	* @Email 2061802928@qq.com
+	* @Create Date 2019/04/11
+	* @Create Time 10:41
+	* @Describe 数据处理
+	* @param Request $request
+	* @return mixed
+	*/
 	public function setPredefinedKeyValue($key, $value) {
 		if (!is_string($key))
 			throw new Exception("key should be a string!");

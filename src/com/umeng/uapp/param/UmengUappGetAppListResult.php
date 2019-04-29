@@ -2,7 +2,7 @@
 
 use Amulet\com\alibaba\openapi\client\entity\SDKDomain;
 use Amulet\com\alibaba\openapi\client\entity\ByteArray;
-use Amulet\com/umeng/uapp/param/UmengUappAppInfoData;
+use Amulet\com\umeng\uapp\param\UmengUappAppInfoData;
 
 class UmengUappGetAppListResult
 {

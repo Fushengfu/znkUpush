@@ -1,8 +1,8 @@
 <?php
 namespace Amulet\Umeng\openapi\client\util;
 
-use Amulet\com\alibaba\openapi\client\entity\SDKDomain;
-use Amulet\com\alibaba\openapi\client\entity\ByteArray;
+use Amulet\Umeng\openapi\client\entity\SDKDomain;
+use Amulet\Umeng\openapi\client\entity\ByteArray;
 
 class SDKDomainUtil {
 	public function generateSDKDomainArray($sdkDomain) {

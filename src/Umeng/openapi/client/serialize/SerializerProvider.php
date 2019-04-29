@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\openapi\client\serialize;
 
-use Amulet\com\alibaba\openapi\client\serialize\Json2Deserializer;
-use Amulet\com\alibaba\openapi\client\serialize\Param2RequestSerializer;
-use Amulet\com\alibaba\openapi\client\policy\DataProtocol;
+use Amulet\Umeng\openapi\client\serialize\Json2Deserializer;
+use Amulet\Umeng\openapi\client\serialize\Param2RequestSerializer;
+use Amulet\Umeng\openapi\client\policy\DataProtocol;
 
 class SerializerProvider {
 	private static $serializerStore = array ();

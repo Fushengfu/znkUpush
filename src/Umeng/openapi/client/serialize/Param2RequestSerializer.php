@@ -1,11 +1,11 @@
 <?php
 namespace Amulet\Umeng\openapi\client\serialize;
 
-use Amulet\com\alibaba\openapi\client\serialize\Serializer;
-use Amulet\com\alibaba\openapi\client\policy\DataProtocol;
-use Amulet\com\alibaba\openapi\client\entity\ByteArray;
-use Amulet\com\alibaba\openapi\client\entity\SDKDomain;
-use Amulet\com\alibaba\openapi\client\util\SDKDomainUtil;
+use Amulet\Umeng\openapi\client\serialize\Serializer;
+use Amulet\Umeng\openapi\client\policy\DataProtocol;
+use Amulet\Umeng\openapi\client\entity\ByteArray;
+use Amulet\Umeng\openapi\client\entity\SDKDomain;
+use Amulet\Umeng\openapi\client\util\SDKDomainUtil;
 
 class Param2RequestSerializer implements Serializer
 {

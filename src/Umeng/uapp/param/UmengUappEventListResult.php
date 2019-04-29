@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\com\alibaba\openapi\client\entity\SDKDomain;
-use Amulet\com\alibaba\openapi\client\entity\ByteArray;
-use Amulet\com/umeng/uapp/param/UmengUappEventInfo;
+use Amulet\Umeng\openapi\client\entity\SDKDomain;
+use Amulet\Umeng\openapi\client\entity\ByteArray;
+use Amulet\com\umeng\uapp\param\UmengUappEventInfo;
 
 class UmengUappEventListResult
 {

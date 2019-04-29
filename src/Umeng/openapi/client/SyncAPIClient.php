@@ -1,8 +1,8 @@
 <?php
 namespace Amulet\Umeng\openapi\client;
 
-use Amulet\com\alibaba\openapi\client\serialize\SerializerProvider;
-use Amulet\com\alibaba\openapi\client\util\SignatureUtil;
+use Amulet\Umeng\openapi\client\serialize\SerializerProvider;
+use Amulet\Umeng\openapi\client\util\SignatureUtil;
 
 class SyncAPIClient {
 	var $clientPolicy;

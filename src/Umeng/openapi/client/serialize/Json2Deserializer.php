@@ -1,8 +1,8 @@
 <?php
 namespace Amulet\Umeng\openapi\client\serialize;
 
-use Amulet\com\alibaba\openapi\client\serialize\DeSerializer;
-use Amulet\com\alibaba\openapi\client\exception\OceanException;
+use Amulet\Umeng\openapi\client\serialize\DeSerializer;
+use Amulet\Umeng\openapi\client\exception\OceanException;
 
 class Json2Deserializer implements DeSerializer {
 	public function supportedContentType() {

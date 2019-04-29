@@ -1,8 +1,8 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\com\alibaba\openapi\client\entity\SDKDomain;
-use Amulet\com\alibaba\openapi\client\entity\ByteArray;
+use Amulet\Umeng\openapi\client\entity\SDKDomain;
+use Amulet\Umeng\openapi\client\entity\ByteArray;
 
 class UmengUappChannelInfo extends SDKDomain
 {

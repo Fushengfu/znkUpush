@@ -6,9 +6,10 @@
 ```
 composer require amulet/znk-upush
 ```
-## 示例
+## 消息推送示例
+
+### 消息推送类 Umeng
 ```
-实例化实例
 use Amulet\Umeng;
 $umeng = new Umeng(appkey, secret);
 
@@ -29,4 +30,13 @@ $result = $upush->setParams($data)->unicast($deviceType);// $deviceType 设备�
 
 //广播
 $result = $upush->setParams($data)->broadcast($deviceType);
+```
+
+### 请求openapi接口类  Client
+
+```
+use Amulet\Client;
+$client = new Client('apiKey', 'apiSecurity');
+$result = $client->getAppCount();
+var_dump($result);
 ```

@@ -1,11 +1,11 @@
 <?php
-namespace Amulet\Umeng\openapi\client\serialize;
+namespace Amulet\Umeng\openapi\serialize;
 
-use Amulet\Umeng\openapi\client\serialize\Serializer;
-use Amulet\Umeng\openapi\client\policy\DataProtocol;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\util\SDKDomainUtil;
+use Amulet\Umeng\openapi\serialize\Serializer;
+use Amulet\Umeng\openapi\policy\DataProtocol;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\util\SDKDomainUtil;
 
 class Param2RequestSerializer implements Serializer
 {
@@ -18,7 +18,7 @@ class Param2RequestSerializer implements Serializer
 		if($serializer==null){
 			return $serializedResult;
 		}
-		$ref = new ReflectionObject ( $serializer );
+		$ref = new \ReflectionObject( $serializer );
 		$sdkStdResultArray = null;
 		foreach ( $ref->getMethods () as $tempMethod ) {
 			$methodName = $tempMethod->name;

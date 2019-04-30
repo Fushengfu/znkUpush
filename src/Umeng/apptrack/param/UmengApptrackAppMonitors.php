@@ -1,8 +1,8 @@
 <?php
 namespace Amulet\Umeng\apptrack\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
 
 class UmengApptrackAppMonitors extends SDKDomain
 {

@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappDailyDataInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappDailyDataInfo;
 
 class UmengUappGetTodayYesterdayDataResult
 {

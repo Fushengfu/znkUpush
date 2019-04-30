@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappChannelInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappChannelInfo;
 
 class UmengUappGetChannelDataResult
 {
@@ -75,7 +75,7 @@ class UmengUappGetChannelDataResult
             $object = json_decode ( json_encode ( $channelInfosResult ), true );
             $this->channelInfos = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappChannelInfoResult=new UmengUappChannelInfo();
                 $UmengUappChannelInfoResult->setArrayResult($arrayobject );
                 $this->channelInfos [$i] = $UmengUappChannelInfoResult;

@@ -1,5 +1,5 @@
 <?php
-namespace Amulet\Umeng\openapi\client\serialize;
+namespace Amulet\Umeng\openapi\serialize;
 
 interface DeSerializer
 {

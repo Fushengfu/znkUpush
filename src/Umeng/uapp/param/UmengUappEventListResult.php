@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappEventInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappEventInfo;
 
 class UmengUappEventListResult
 {
@@ -73,7 +73,7 @@ class UmengUappEventListResult
             $object = json_decode ( json_encode ( $eventInfoResult ), true );
             $this->eventInfo = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappEventInfoResult=new UmengUappEventInfo();
                 $UmengUappEventInfoResult->setArrayResult($arrayobject );
                 $this->eventInfo [$i] = $UmengUappEventInfoResult;

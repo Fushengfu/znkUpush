@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappRetentionInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappRetentionInfo;
 
 class UmengUappGetRetentionsResult
 {
@@ -37,7 +37,7 @@ class UmengUappGetRetentionsResult
             $object = json_decode ( json_encode ( $retentionInfoResult ), true );
             $this->retentionInfo = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappRetentionInfoResult=new UmengUappRetentionInfo();
                 $UmengUappRetentionInfoResult->setArrayResult($arrayobject );
                 $this->retentionInfo [$i] = $UmengUappRetentionInfoResult;

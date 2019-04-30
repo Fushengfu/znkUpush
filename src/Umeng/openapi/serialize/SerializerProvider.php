@@ -1,9 +1,11 @@
 <?php
-namespace Amulet\Umeng\openapi\client\serialize;
+namespace Amulet\Umeng\openapi\serialize;
 
-use Amulet\Umeng\openapi\client\serialize\Json2Deserializer;
-use Amulet\Umeng\openapi\client\serialize\Param2RequestSerializer;
-use Amulet\Umeng\openapi\client\policy\DataProtocol;
+use Amulet\Umeng\openapi\serialize\{
+	Json2Deserializer,
+	Param2RequestSerializer
+};
+use Amulet\Umeng\openapi\policy\DataProtocol;
 
 class SerializerProvider {
 	private static $serializerStore = array ();

@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappAccountInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappAccountInfo;
 
 class UmengUappGetNewAccountsResult
 {
@@ -37,7 +37,7 @@ class UmengUappGetNewAccountsResult
             $object = json_decode ( json_encode ( $newAccountInfoResult ), true );
             $this->newAccountInfo = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappAccountInfoResult=new UmengUappAccountInfo();
                 $UmengUappAccountInfoResult->setArrayResult($arrayobject );
                 $this->newAccountInfo [$i] = $UmengUappAccountInfoResult;

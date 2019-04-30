@@ -1,8 +1,10 @@
 <?php
-namespace Amulet\Umeng\openapi\client\util;
+namespace Amulet\Umeng\openapi\util;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
+use Amulet\Umeng\openapi\entity\{
+	SDKDomain,
+	ByteArray
+};
 
 class SDKDomainUtil {
 	public function generateSDKDomainArray($sdkDomain) {

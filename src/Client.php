@@ -1,339 +1,368 @@
 <?php
+/**
+ * 
+ */
+namespace Amulet;
 
-/* Version 0.9, 6th April 2003 - Simon Willison ( http://simon.incutio.com/ )
-   Manual: http://scripts.incutio.com/httpclient/
-*/
+use Amulet\Umeng\openapi\policy\{
+    ClientPolicy,
+    RequestPolicy
+};
+use Amulet\Umeng\openapi\{
+    APIId,
+    APIRequest,
+    SyncAPIClient
+};
+use Amulet\Umeng\openapi\exception\OceanException;
+use Amulet\Umeng\uapp\param\{
+    UmengUappGetTodayYesterdayDataParam, UmengUappGetTodayYesterdayDataResult,
+    UmengUappGetYesterdayDataParam, UmengUappGetYesterdayDataResult,
+    UmengUappGetTodayDataParam, UmengUappGetTodayDataResult, 
+    UmengUappGetAllAppDataParam, UmengUappGetAllAppDataResult,
+    UmengUappGetAppCountParam, UmengUappGetAppCountResult,
+    UmengUappGetChannelDataParam, UmengUappGetChannelDataResult,
+    UmengUappGetVersionDataParam, UmengUappGetVersionDataResult,
+    UmengUappGetRetentionsParam, UmengUappGetRetentionsResult,
+    UmengUappGetDurationsParam, UmengUappGetDurationsResult,
+    UmengUappGetLaunchesParam, UmengUappGetLaunchesResult,
+    UmengUappGetActiveUsersParam, UmengUappGetActiveUsersResult,
+    UmengUappGetNewUsersParam, UmengUappGetNewUsersResult,
+    UmengUappGetDailyDataParam, UmengUappGetDailyDataResult,
+    UmengUappGetAppListParam, UmengUappGetAppListResult
+};
 
-class HttpClient {
-    // Request vars
-    var $host;
-    var $port;
-    var $path;
-    var $method;
-    var $postdata = '';
-    var $cookies = array();
-    var $referer;
-    var $accept = 'text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*';
-    var $accept_encoding = 'gzip';
-    var $accept_language = 'en-us';
-    var $user_agent = 'Incutio HttpClient v0.9';
-    // Options
-    var $timeout = 20;
-    var $use_gzip = true;
-    var $persist_cookies = true;  // If true, received cookies are placed in the $this->cookies array ready for the next request
-                                  // Note: This currently ignores the cookie path (and time) completely. Time is not important, 
-                                  //       but path could possibly lead to security problems.
-    var $persist_referers = true; // For each request, sends path of last request as referer
-    var $debug = false;
-    var $handle_redirects = true; // Auaomtically redirect if Location or URI header is found
-    var $max_redirects = 5;
-    var $headers_only = false;    // If true, stops receiving once headers have been read.
-    // Basic authorization variables
-    var $username;
-    var $password;
-    // Response vars
-    var $status;
-    var $headers = array();
-    var $content = '';
-    var $errormsg;
-    // Tracker variables
-    var $redirect_count = 0;
-    var $cookie_host = '';
-    function HttpClient($host, $port=80) {
-        $this->host = $host;
-        $this->port = $port;
-    }
-    function get($path, $data = false) {
-        $this->path = $path;
-        $this->method = 'GET';
-        if ($data) {
-            $this->path .= '?'.$this->buildQueryString($data);
+class Client
+{
+    protected $syncAPIClient = null;
+
+    protected $apiKey = null;
+
+    protected $apiSecurity = null;
+
+    protected $serverHost = null;
+
+    protected $reqPolicy = null;
+
+    protected $result = null;
+
+    protected $request = null;
+
+    public function __construct($apiKey, $apiSecurity, $serverHost = 'gateway.open.umeng.com')
+    {
+        if (! $apiKey ) {
+            throw new Exception("apiKey is required", 1);
         }
-        return $this->doRequest();
-    }
-    function post($path, $data) {
-        $this->path = $path;
-        $this->method = 'POST';
-        $this->postdata = $this->buildQueryString($data);
-    	return $this->doRequest();
-    }
-    function buildQueryString($data) {
-        $querystring = '';
-        if (is_array($data)) {
-            // Change data in to postable data
-    		foreach ($data as $key => $val) {
-    			if (is_array($val)) {
-    				foreach ($val as $val2) {
-    					$querystring .= urlencode($key).'='.urlencode($val2).'&';
-    				}
-    			} else {
-    				$querystring .= urlencode($key).'='.urlencode($val).'&';
-    			}
-    		}
-    		$querystring = substr($querystring, 0, -1); // Eliminate unnecessary &
-    	} else {
-    	    $querystring = $data;
-    	}
-    	return $querystring;
-    }
-    function doRequest() {
-        // Performs the actual HTTP request, returning true or false depending on outcome
-		if (!$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout)) {
-		    // Set error message
-            switch($errno) {
-				case -3:
-					$this->errormsg = 'Socket creation failed (-3)';
-				case -4:
-					$this->errormsg = 'DNS lookup failure (-4)';
-				case -5:
-					$this->errormsg = 'Connection refused or timed out (-5)';
-				default:
-					$this->errormsg = 'Connection failed ('.$errno.')';
-			    $this->errormsg .= ' '.$errstr;
-			    $this->debug($this->errormsg);
-			}
-			return false;
+        if (! $apiSecurity ) {
+            throw new Exception("apiSecurity is required", 1);
         }
-        socket_set_timeout($fp, $this->timeout);
-        $request = $this->buildRequest();
-        $this->debug('Request', $request);
-        fwrite($fp, $request);
-    	// Reset all the variables that should not persist between requests
-    	$this->headers = array();
-    	$this->content = '';
-    	$this->errormsg = '';
-    	// Set a couple of flags
-    	$inHeaders = true;
-    	$atStart = true;
-    	// Now start reading back the response
-    	while (!feof($fp)) {
-    	    $line = fgets($fp, 4096);
-    	    if ($atStart) {
-    	        // Deal with first line of returned data
-    	        $atStart = false;
-    	        if (!preg_match('/HTTP\/(\\d\\.\\d)\\s*(\\d+)\\s*(.*)/', $line, $m)) {
-    	            $this->errormsg = "Status code line invalid: ".htmlentities($line);
-    	            $this->debug($this->errormsg);
-    	            return false;
-    	        }
-    	        $http_version = $m[1]; // not used
-    	        $this->status = $m[2];
-    	        $status_string = $m[3]; // not used
-    	        $this->debug(trim($line));
-    	        continue;
-    	    }
-    	    if ($inHeaders) {
-    	        if (trim($line) == '') {
-    	            $inHeaders = false;
-    	            $this->debug('Received Headers', $this->headers);
-    	            if ($this->headers_only) {
-    	                break; // Skip the rest of the input
-    	            }
-    	            continue;
-    	        }
-    	        if (!preg_match('/([^:]+):\\s*(.*)/', $line, $m)) {
-    	            // Skip to the next header
-    	            continue;
-    	        }
-    	        $key = strtolower(trim($m[1]));
-    	        $val = trim($m[2]);
-    	        // Deal with the possibility of multiple headers of same name
-    	        if (isset($this->headers[$key])) {
-    	            if (is_array($this->headers[$key])) {
-    	                $this->headers[$key][] = $val;
-    	            } else {
-    	                $this->headers[$key] = array($this->headers[$key], $val);
-    	            }
-    	        } else {
-    	            $this->headers[$key] = $val;
-    	        }
-    	        continue;
-    	    }
-    	    // We're not in the headers, so append the line to the contents
-    	    $this->content .= $line;
-        }
-        fclose($fp);
-        // If data is compressed, uncompress it
-        if (isset($this->headers['content-encoding']) && $this->headers['content-encoding'] == 'gzip') {
-            $this->debug('Content is gzip encoded, unzipping it');
-            $this->content = substr($this->content, 10); // See http://www.php.net/manual/en/function.gzencode.php
-            $this->content = gzinflate($this->content);
-        }
-        // If $persist_cookies, deal with any cookies
-        if ($this->persist_cookies && isset($this->headers['set-cookie']) && $this->host == $this->cookie_host) {
-            $cookies = $this->headers['set-cookie'];
-            if (!is_array($cookies)) {
-                $cookies = array($cookies);
-            }
-            foreach ($cookies as $cookie) {
-                if (preg_match('/([^=]+)=([^;]+);/', $cookie, $m)) {
-                    $this->cookies[$m[1]] = $m[2];
-                }
-            }
-            // Record domain of cookies for security reasons
-            $this->cookie_host = $this->host;
-        }
-        // If $persist_referers, set the referer ready for the next request
-        if ($this->persist_referers) {
-            $this->debug('Persisting referer: '.$this->getRequestURL());
-            $this->referer = $this->getRequestURL();
-        }
-        // Finally, if handle_redirects and a redirect is sent, do that
-        if ($this->handle_redirects) {
-            if (++$this->redirect_count >= $this->max_redirects) {
-                $this->errormsg = 'Number of redirects exceeded maximum ('.$this->max_redirects.')';
-                $this->debug($this->errormsg);
-                $this->redirect_count = 0;
-                return false;
-            }
-            $location = isset($this->headers['location']) ? $this->headers['location'] : '';
-            $uri = isset($this->headers['uri']) ? $this->headers['uri'] : '';
-            if ($location || $uri) {
-                $url = parse_url($location.$uri);
-                // This will FAIL if redirect is to a different site
-                return $this->get($url['path']);
-            }
-        }
-        return true;
+        $this->apiKey = $apiKey;
+        $this->apiSecurity = $apiSecurity;
+        $this->serverHost = $serverHost;
+        $this->getApiClientInstance();
+        $this->setRequestPolicy();
     }
-    function buildRequest() {
-        $headers = array();
-        $headers[] = "{$this->method} {$this->path} HTTP/1.0"; // Using 1.1 leads to all manner of problems, such as "chunked" encoding
-        $headers[] = "Host: {$this->host}";
-        $headers[] = "User-Agent: {$this->user_agent}";
-        $headers[] = "Accept: {$this->accept}";
-        if ($this->use_gzip) {
-            $headers[] = "Accept-encoding: {$this->accept_encoding}";
+
+    public function getApiClientInstance()
+    {
+        if (null == $this->syncAPIClient) {
+            $clientPolicy = new ClientPolicy($this->apiKey, $this->apiSecurity, $this->serverHost);
+            $this->syncAPIClient = new SyncAPIClient($clientPolicy);
         }
-        $headers[] = "Accept-language: {$this->accept_language}";
-        if ($this->referer) {
-            $headers[] = "Referer: {$this->referer}";
-        }
-    	// Cookies
-    	if ($this->cookies) {
-    	    $cookie = 'Cookie: ';
-    	    foreach ($this->cookies as $key => $value) {
-    	        $cookie .= "$key=$value; ";
-    	    }
-    	    $headers[] = $cookie;
-    	}
-    	// Basic authentication
-    	if ($this->username && $this->password) {
-    	    $headers[] = 'Authorization: BASIC '.base64_encode($this->username.':'.$this->password);
-    	}
-    	// If this is a POST, set the content type and length
-    	if ($this->postdata) {
-    	    $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-    	    $headers[] = 'Content-Length: '.strlen($this->postdata);
-    	}
-    	$request = implode("\r\n", $headers)."\r\n\r\n".$this->postdata;
-    	return $request;
+        return $this;
     }
-    function getStatus() {
-        return $this->status;
+
+    /**
+     *  设置请求协议
+     */
+    public function setRequestPolicy()
+    {
+        $reqPolicy = new RequestPolicy();
+        $reqPolicy->httpMethod = "POST";
+        $reqPolicy->needAuthorization = false;
+        $reqPolicy->requestSendTimestamp = false;
+        // 测试环境只支持http
+        // $reqPolicy->useHttps = false;
+        $reqPolicy->useHttps = true;
+        $reqPolicy->useSignture = true;
+        $reqPolicy->accessPrivateApi = false;
+        $this->reqPolicy = $reqPolicy;
+        return $this;
     }
-    function getContent() {
-        return $this->content;
+
+    /**
+     *  构造请求
+     */
+    public function setRequest($param, $name, $namespace = "com.umeng.uapp",  $version = 1)
+    {
+        $request = new APIRequest();
+        $apiId = new APIId($namespace, $name, $version );
+        $request->apiId = $apiId;
+        $request->requestEntity = $param;
+        $this->request = $request;
+        return $this;
     }
-    function getHeaders() {
-        return $this->headers;
-    }
-    function getHeader($header) {
-        $header = strtolower($header);
-        if (isset($this->headers[$header])) {
-            return $this->headers[$header];
-        } else {
-            return false;
+
+    /**
+     *  构造结果
+     */
+    public function send()
+    {
+        try {
+            return $this->syncAPIClient->send( $this->request, $this->result, $this->reqPolicy );
+        } catch ( OceanException $ex ) {
+            echo "Exception occured with code[";
+            echo $ex->getErrorCode ();
+            echo "] message [";
+            echo $ex->getMessage ();
+            echo "].";
         }
     }
-    function getError() {
-        return $this->errormsg;
+
+    /**
+     *  获取指定App今天与昨天的统计数据
+     *
+     */
+    public function getTodayYesterdayData($appkey)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetTodayYesterdayDataParam();
+        $param->setAppkey($appkey);
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getTodayYesterdayData");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetTodayYesterdayDataResult();
+        return $this->send();
     }
-    function getCookies() {
-        return $this->cookies;
+
+    /**
+     *  获取指定App昨日的统计数据
+     *
+     */
+    public function getYesterdayData($appkey)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetYesterdayDataParam();
+        $param->setAppkey($appkey);
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getYesterdayData");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetYesterdayDataResult();
+        return $this->send();
     }
-    function getRequestURL() {
-        $url = 'http://'.$this->host;
-        if ($this->port != 80) {
-            $url .= ':'.$this->port;
-        }            
-        $url .= $this->path;
-        return $url;
+
+    /**
+     *  获取指定App今日的统计数据
+     *
+     */
+    public function getTodayData($appkey)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetTodayDataParam();
+        $param->setAppkey($appkey);
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getTodayData");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetTodayDataResult();
+        return $this->send();
     }
-    // Setter methods
-    function setUserAgent($string) {
-        $this->user_agent = $string;
+
+    /**
+     *  获取当前用户所有App昨日和今日的基础统计数据（活跃用户数，新增用户数，启动次数，总用户数）
+     *
+     */
+    public function getAllAppData()
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetAllAppDataParam();
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getAllAppData");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetAllAppDataResult();
+        return $this->send();
     }
-    function setAuthorization($username, $password) {
-        $this->username = $username;
-        $this->password = $password;
+
+    /**
+     *  获取当前用户所有App的数量
+     *
+     */
+    public function getAppCount()
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetAppCountParam();
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getAppCount");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetAppCountResult();
+        return $this->send();
     }
-    function setCookies($array) {
-        $this->cookies = $array;
+
+    /**
+     *  获取指定App按照分发渠道维度的统计数据
+     *
+     */
+    public function getChannelData($appkey, $date)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetChannelDataParam();
+        $param->setAppkey($appkey);
+        $param->setDate($date);
+        $param->setPerPage();
+        $param->setPage();
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getChannelData");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetChannelDataResult();
+        return $this->send();
     }
-    // Option setting methods
-    function useGzip($boolean) {
-        $this->use_gzip = $boolean;
+
+    /**
+     *  获取指定App按照版本维度的统计数据
+     *
+     */
+    public function getVersionData($appkey, $date)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetVersionDataParam();
+        $param->setAppkey($appkey);
+        $param->setDate($date);
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getVersionData");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetVersionDataResult();
+        return $this->send();
     }
-    function setPersistCookies($boolean) {
-        $this->persist_cookies = $boolean;
+
+    /**
+     *  获取指定App某个时间范围内的用户留存率
+     *
+     */
+    public function getRetentions($appkey, $start_at, $end_at)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetRetentionsParam();
+        $param->setAppkey($appkey);
+        $param->setStartDate($start_at);
+        $param->setEndDate($end_at);
+        $param->setPeriodType("daily");
+        $param->setChannel("");
+        $param->setVersion("");
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getRetentions");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetRetentionsResult();
+        return $this->send();
     }
-    function setPersistReferers($boolean) {
-        $this->persist_referers = $boolean;
+
+    /**
+     *  获取指定App某个时间范围内的使用时长统计数据
+     *
+     */
+    public function getDurations($appkey, $date)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetDurationsParam();
+        $param->setAppkey($appkey);
+        $param->setDate($date);
+        $param->setStatType("daily");
+        $param->setChannel("App%20Store");
+        $param->setVersion("1.0.0");
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getDurations");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetDurationsResult();
+        return $this->send();
     }
-    function setHandleRedirects($boolean) {
-        $this->handle_redirects = $boolean;
+
+    /**
+     *  获取指定App某个时间范围内的启动次数
+     *
+     */
+    public function getLaunches($appkey, $start_at, $end_at)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetLaunchesParam();
+        $param->setAppkey($appkey);
+        $param->setStartDate($start_at);
+        $param->setEndDate($end_at);
+        $param->setPeriodType("daily");
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getLaunches");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetLaunchesResult();
+        return $this->send();
     }
-    function setMaxRedirects($num) {
-        $this->max_redirects = $num;
+
+    /**
+     *  获取指定App某个时间范围内的活跃用户数
+     *
+     */
+    public function getActiveUsers($appkey, $start_at, $end_at)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetActiveUsersParam();
+        $param->setAppkey($appkey);
+        $param->setStartDate($start_at);
+        $param->setEndDate($end_at);
+        $param->setPeriodType("daily");
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getActiveUsers");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetActiveUsersResult();
+        return $this->send();
     }
-    function setHeadersOnly($boolean) {
-        $this->headers_only = $boolean;
+
+    /**
+     *  获取指定App某个时间范围内的新增用户数
+     *
+     */
+    public function getNewUsers($appkey, $start_at, $end_at)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetNewUsersParam();
+        $param->setAppkey($appkey);
+        $param->setStartDate($start_at);
+        $param->setEndDate($end_at);
+        $param->setPeriodType("daily");
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getNewUsers");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetNewUsersResult();
+        return $this->send();
     }
-    function setDebug($boolean) {
-        $this->debug = $boolean;
+
+    /**
+     *  获取指定App特定日期的统计数据
+     *
+     */
+    public function getDailyData($appkey, $date)
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetDailyDataParam();
+        $param->setAppkey($appkey);
+        $param->setDate($date);
+        $param->setVersion("");
+        $param->setChannel("");
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getDailyData");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetDailyDataResult();
+        return $this->send();
     }
-    // "Quick" static methods
-    function quickGet($url) {
-        $bits = parse_url($url);
-        $host = $bits['host'];
-        $port = isset($bits['port']) ? $bits['port'] : 80;
-        $path = isset($bits['path']) ? $bits['path'] : '/';
-        if (isset($bits['query'])) {
-            $path .= '?'.$bits['query'];
-        }
-        $client = new HttpClient($host, $port);
-        if (!$client->get($path)) {
-            return false;
-        } else {
-            return $client->getContent();
-        }
+
+    /**
+     *  获取当前用户的所有App列表
+     *
+     */
+    public function getAppList()
+    {
+        // --------------------------构造参数----------------------------------
+        $param = new UmengUappGetAppListParam();
+        $param->setPage(1);
+        $param->setPerPage(10);
+        // --------------------------构造请求----------------------------------
+        $this->setRequest($param, "umeng.uapp.getAppList");
+        // --------------------------构造结果----------------------------------
+        $this->result = new UmengUappGetAppListResult();
+        return $this->send();
     }
-    function quickPost($url, $data) {
-        $bits = parse_url($url);
-        $host = $bits['host'];
-        $port = isset($bits['port']) ? $bits['port'] : 80;
-        $path = isset($bits['path']) ? $bits['path'] : '/';
-        $client = new HttpClient($host, $port);
-        if (!$client->post($path, $data)) {
-            return false;
-        } else {
-            return $client->getContent();
-        }
-    }
-    function debug($msg, $object = false) {
-        if ($this->debug) {
-            print '<div style="border: 1px solid red; padding: 0.5em; margin: 0.5em;"><strong>HttpClient Debug:</strong> '.$msg;
-            if ($object) {
-                ob_start();
-        	    print_r($object);
-        	    $content = htmlentities(ob_get_contents());
-        	    ob_end_clean();
-        	    print '<pre>'.$content.'</pre>';
-        	}
-        	print '</div>';
-        }
-    }   
 }
-
-?>

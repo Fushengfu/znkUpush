@@ -1,7 +1,8 @@
 <?php
-namespace Amulet\Umeng\openapi\client\util;
+namespace Amulet\Umeng\openapi\util;
 
-class DateUtil {
+class DateUtil
+{
 	public static function getDateFormatInServer() {
 		return "yyyyMMddHHmmssSSSZ";
 	}

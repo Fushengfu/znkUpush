@@ -1,7 +1,7 @@
 <?php
-namespace Amulet\Umeng\openapi\client\exception;
+namespace Amulet\Umeng\openapi\exception;
 
-class OceanException extends RuntimeException
+class OceanException extends \RuntimeException
 {
 	private $errorCode;
 	function __construct($message = null, $code = 0) {

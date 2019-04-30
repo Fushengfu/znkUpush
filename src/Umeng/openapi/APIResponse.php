@@ -1,5 +1,5 @@
 <?php
-namespace Amulet\Umeng\openapi\client;
+namespace Amulet\Umeng\openapi;
 
 class APIResponse {
 	

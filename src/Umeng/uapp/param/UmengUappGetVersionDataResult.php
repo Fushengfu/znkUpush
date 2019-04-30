@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappVersionInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappVersionInfo;
 
 class UmengUappGetVersionDataResult
 {
@@ -37,7 +37,7 @@ class UmengUappGetVersionDataResult
             $object = json_decode ( json_encode ( $versionInfosResult ), true );
             $this->versionInfos = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappVersionInfoResult=new UmengUappVersionInfo();
                 $UmengUappVersionInfoResult->setArrayResult($arrayobject );
                 $this->versionInfos [$i] = $UmengUappVersionInfoResult;

@@ -1,5 +1,5 @@
 <?php
-namespace Amulet\Umeng\openapi\client;
+namespace Amulet\Umeng\openapi;
 
 class APIId {
 	
@@ -20,7 +20,7 @@ class APIId {
 	 * @var integer
 	 */
 	var $version;
-	function APIId( $namespace,  $name,  $version) {
+	function __construct( $namespace,  $name,  $version) {
 		$this->namespace = $namespace;
 		$this->name = $name;
 		$this->version = $version;

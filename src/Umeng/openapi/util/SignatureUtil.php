@@ -1,5 +1,10 @@
 <?php
-namespace Amulet\Umeng\openapi\client\util;
+namespace Amulet\Umeng\openapi\util;
+
+use Amulet\Umeng\openapi\policy\{
+	RequestPolicy,
+	ClientPolicy
+};
 
 class SignatureUtil {
 	

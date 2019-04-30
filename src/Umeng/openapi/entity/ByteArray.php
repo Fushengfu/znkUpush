@@ -1,5 +1,5 @@
 <?php
-namespace Amulet\Umeng\openapi\client\entity;
+namespace Amulet\Umeng\openapi\entity;
 
 class ByteArray {
 

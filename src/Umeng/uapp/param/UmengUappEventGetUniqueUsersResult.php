@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappDateCountInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappDateCountInfo;
 
 class UmengUappEventGetUniqueUsersResult {
 
@@ -36,7 +36,7 @@ class UmengUappEventGetUniqueUsersResult {
             $object = json_decode ( json_encode ( $uniqueUsersResult ), true );
             $this->uniqueUsers = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappDateCountInfoResult=new UmengUappDateCountInfo();
                 $UmengUappDateCountInfoResult->setArrayResult($arrayobject );
                 $this->uniqueUsers [$i] = $UmengUappDateCountInfoResult;

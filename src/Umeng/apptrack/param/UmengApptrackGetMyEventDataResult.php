@@ -1,8 +1,8 @@
 <?php
 namespace Amulet\Umeng\apptrack\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
 use Amulet\com\umeng\apptrack\param\UmengApptrackAppEvent;
 
 class UmengApptrackGetMyEventDataResult
@@ -37,7 +37,7 @@ class UmengApptrackGetMyEventDataResult
             $object = json_decode ( json_encode ( $dataResult ), true );
             $this->data = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengApptrackAppEventResult=new UmengApptrackAppEvent();
                 $UmengApptrackAppEventResult->setArrayResult($arrayobject );
                 $this->data [$i] = $UmengApptrackAppEventResult;

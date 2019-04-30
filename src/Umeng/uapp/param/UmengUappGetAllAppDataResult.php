@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappAllAppData;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappAllAppData;
 
 class UmengUappGetAllAppDataResult
 {
@@ -37,7 +37,7 @@ class UmengUappGetAllAppDataResult
             $object = json_decode ( json_encode ( $allAppDataResult ), true );
             $this->allAppData = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappAllAppDataResult=new UmengUappAllAppData();
                 $UmengUappAllAppDataResult->setArrayResult($arrayobject );
                 $this->allAppData [$i] = $UmengUappAllAppDataResult;

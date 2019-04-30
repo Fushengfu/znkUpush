@@ -1,5 +1,5 @@
 <?php
-namespace Amulet\Umeng\openapi\client\policy;
+namespace Amulet\Umeng\openapi\policy;
 
 class DataProtocol {
 	const param2 = "param2";

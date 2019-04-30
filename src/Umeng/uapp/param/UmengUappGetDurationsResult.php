@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappDurationInfo;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappDurationInfo;
 
 class UmengUappGetDurationsResult
 {
@@ -56,7 +56,7 @@ class UmengUappGetDurationsResult
             $object = json_decode ( json_encode ( $durationInfosResult ), true );
             $this->durationInfos = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappDurationInfoResult=new UmengUappDurationInfo();
                 $UmengUappDurationInfoResult->setArrayResult($arrayobject );
                 $this->durationInfos [$i] = $UmengUappDurationInfoResult;

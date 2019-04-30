@@ -1,8 +1,8 @@
 <?php
 namespace Amulet\Umeng\apptrack\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
 use Amulet\com\umeng\apptrack\param\UmengApptrackAppRecPlan;
 
 class UmengApptrackGetPlanListResult
@@ -56,7 +56,7 @@ class UmengApptrackGetPlanListResult
             $object = json_decode ( json_encode ( $dataResult ), true );
             $this->data = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengApptrackAppRecPlanResult=new UmengApptrackAppRecPlan();
                 $UmengApptrackAppRecPlanResult->setArrayResult($arrayobject );
                 $this->data [$i] = $UmengApptrackAppRecPlanResult;

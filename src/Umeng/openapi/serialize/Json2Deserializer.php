@@ -1,8 +1,8 @@
 <?php
-namespace Amulet\Umeng\openapi\client\serialize;
+namespace Amulet\Umeng\openapi\serialize;
 
-use Amulet\Umeng\openapi\client\serialize\DeSerializer;
-use Amulet\Umeng\openapi\client\exception\OceanException;
+use Amulet\Umeng\openapi\serialize\DeSerializer;
+use Amulet\Umeng\openapi\exception\OceanException;
 
 class Json2Deserializer implements DeSerializer {
 	public function supportedContentType() {

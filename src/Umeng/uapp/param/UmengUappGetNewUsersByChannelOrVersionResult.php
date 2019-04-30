@@ -1,9 +1,9 @@
 <?php
 namespace Amulet\Umeng\uapp\param;
 
-use Amulet\Umeng\openapi\client\entity\SDKDomain;
-use Amulet\Umeng\openapi\client\entity\ByteArray;
-use Amulet\com\umeng\uapp\param\UmengUappCountData;
+use Amulet\Umeng\openapi\entity\SDKDomain;
+use Amulet\Umeng\openapi\entity\ByteArray;
+use Amulet\Umeng\uapp\param\UmengUappCountData;
 
 class UmengUappGetNewUsersByChannelOrVersionResult
 {
@@ -37,7 +37,7 @@ class UmengUappGetNewUsersByChannelOrVersionResult
             $object = json_decode ( json_encode ( $newUserInfoResult ), true );
             $this->newUserInfo = array ();
             for($i = 0; $i < count ( $object ); $i ++) {
-                $arrayobject = new ArrayObject ( $object [$i] );
+                $arrayobject = new \ArrayObject( $object [$i] );
                 $UmengUappCountDataResult=new UmengUappCountData();
                 $UmengUappCountDataResult->setArrayResult($arrayobject );
                 $this->newUserInfo [$i] = $UmengUappCountDataResult;

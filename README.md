@@ -1,13 +1,17 @@
 # znkUpush
-友盟sdk接口
+集成封装友盟开放接口
+*友盟消息推送
+*友盟openapi接口类
+***
+|Author|Amulet|
+|---|---
+|E-mail|shengfu8161980541@qq.com
 
-# 使用规则
-## 安装
-```
-composer require amulet/znk-upush
-```
+## 安装要求
+php: ~7.0
+## 安装教程
+`composer require amulet/znk-upush`
 ## 消息推送示例
-
 ### 消息推送类 Umeng
 ```
 use Amulet\Umeng;

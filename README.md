@@ -2,6 +2,10 @@
 友盟sdk接口
 
 # 使用规则
+## 安装
+```
+composer require amulet/znk-upush
+```
 ## 示例
 ```
 实例化实例

@@ -120,7 +120,7 @@ class Client
 
     /**
      *  获取指定App今天与昨天的统计数据
-     *
+     *  @param string  $appkey
      */
     public function getTodayYesterdayData($appkey)
     {
@@ -136,7 +136,7 @@ class Client
 
     /**
      *  获取指定App昨日的统计数据
-     *
+     *  @param string  $appkey
      */
     public function getYesterdayData($appkey)
     {
@@ -152,7 +152,7 @@ class Client
 
     /**
      *  获取指定App今日的统计数据
-     *
+     *  @param string  $appkey
      */
     public function getTodayData($appkey)
     {
@@ -198,7 +198,8 @@ class Client
 
     /**
      *  获取指定App按照分发渠道维度的统计数据
-     *
+     *  @param string  $appkey
+     *  @param string  $date
      */
     public function getChannelData($appkey, $date)
     {
@@ -217,7 +218,8 @@ class Client
 
     /**
      *  获取指定App按照版本维度的统计数据
-     *
+     *  @param string  $appkey
+     *  @param string  $date
      */
     public function getVersionData($appkey, $date)
     {
@@ -234,7 +236,9 @@ class Client
 
     /**
      *  获取指定App某个时间范围内的用户留存率
-     *
+     *  @param string  $appkey
+     *  @param string  $start_at
+     *  @param string  $end_at
      */
     public function getRetentions($appkey, $start_at, $end_at)
     {
@@ -255,7 +259,8 @@ class Client
 
     /**
      *  获取指定App某个时间范围内的使用时长统计数据
-     *
+     *  @param string  $appkey
+     *  @param string  $date
      */
     public function getDurations($appkey, $date)
     {
@@ -275,7 +280,9 @@ class Client
 
     /**
      *  获取指定App某个时间范围内的启动次数
-     *
+     *  @param string  $appkey
+     *  @param string  $start_at
+     *  @param string  $end_at
      */
     public function getLaunches($appkey, $start_at, $end_at)
     {
@@ -294,7 +301,9 @@ class Client
 
     /**
      *  获取指定App某个时间范围内的活跃用户数
-     *
+     *  @param string  $appkey
+     *  @param string  $start_at
+     *  @param string  $end_at
      */
     public function getActiveUsers($appkey, $start_at, $end_at)
     {
@@ -313,7 +322,9 @@ class Client
 
     /**
      *  获取指定App某个时间范围内的新增用户数
-     *
+     *  @param string  $appkey
+     *  @param string  $start_at
+     *  @param string  $end_at
      */
     public function getNewUsers($appkey, $start_at, $end_at)
     {
@@ -332,7 +343,8 @@ class Client
 
     /**
      *  获取指定App特定日期的统计数据
-     *
+     *  @param string  $appkey
+     *  @param string  $date
      */
     public function getDailyData($appkey, $date)
     {
